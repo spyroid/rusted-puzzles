@@ -18,5 +18,5 @@ pub fn input_data_u32s() -> Vec<u32> {
 }
 
 pub fn print_debug<T: Debug>(value: T) {
-    println!("{:?}", value);
+    println!("\n{:?}", value);
 }

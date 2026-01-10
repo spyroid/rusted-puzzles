@@ -1,18 +1,17 @@
 use fun_time::fun_time;
 use std::ops::RangeInclusive;
-use std::str::FromStr;
 
-struct PasswordRule {
+struct PasswordRule<'a> {
     range: RangeInclusive<usize>,
     char: char,
-    data: String,
+    data: &'a str,
 }
 
 #[fun_time(give_back)]
 pub fn password_philosophy(input: Vec<String>) -> (usize, usize) {
     let rules = input
         .iter()
-        .map(|line| line.parse::<PasswordRule>().unwrap())
+        .map(|line| PasswordRule::from_str(line).unwrap())
         .collect::<Vec<_>>();
 
     let part1 = rules.iter().filter(|rule| rule.part1()).count();
@@ -21,7 +20,7 @@ pub fn password_philosophy(input: Vec<String>) -> (usize, usize) {
     (part1, part2)
 }
 
-impl PasswordRule {
+impl<'a> PasswordRule<'a> {
     fn part1(&self) -> bool {
         let count = self.data.chars().filter(|&c| c == self.char).count();
         self.range.contains(&count)
@@ -30,12 +29,7 @@ impl PasswordRule {
         (self.data.chars().nth(*self.range.start() - 1) == Some(self.char))
             ^ (self.data.chars().nth(*self.range.end() - 1) == Some(self.char))
     }
-}
-
-impl FromStr for PasswordRule {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(s: &'a str) -> Result<Self, String> {
         let parts: Vec<&str> = s
             .split(|c| c == '-' || c == ' ' || c == ':')
             .filter(|s| !s.is_empty())
@@ -45,7 +39,7 @@ impl FromStr for PasswordRule {
             Ok(PasswordRule {
                 range: min.parse().unwrap()..=max.parse().unwrap(),
                 char: chr.chars().next().ok_or("Invalid char")?,
-                data: data.to_string(),
+                data,
             })
         } else {
             Err("Format must be 'min-max c: data'".to_string())
@@ -63,3 +57,4 @@ mod tests {
         print_debug(password_philosophy(input_data_lines()));
     }
 }
+
