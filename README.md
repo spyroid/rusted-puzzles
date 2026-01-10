@@ -1,1 +1,1 @@
-r.st
+**rust_in_peace()**
