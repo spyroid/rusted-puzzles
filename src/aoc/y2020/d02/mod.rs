@@ -57,4 +57,3 @@ mod tests {
         print_debug(password_philosophy(input_data_lines()));
     }
 }
-
