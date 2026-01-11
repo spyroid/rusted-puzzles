@@ -17,7 +17,7 @@ pub fn toboggan_trajectory(input: Vec<Box<str>>) -> (usize, usize) {
         .collect();
 
     let part1 = slopes[0];
-    let part2 = slopes.iter().fold(1usize, |acc, p| acc * *p);
+    let part2 = slopes.iter().product::<usize>();
 
     (part1, part2)
 }
