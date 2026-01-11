@@ -8,7 +8,7 @@ struct PasswordRule<'a> {
 }
 
 #[fun_time(give_back)]
-pub fn password_philosophy(input: Vec<String>) -> (usize, usize) {
+pub fn password_philosophy(input: Vec<Box<str>>) -> (usize, usize) {
     let rules = input
         .iter()
         .map(|line| PasswordRule::from_str(line).unwrap())

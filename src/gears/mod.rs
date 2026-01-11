@@ -3,13 +3,14 @@ use std::fs;
 
 pub mod point;
 
-pub fn input_data_string() -> String {
-    fs::read_to_string("./data/input.txt").unwrap()
+pub fn input_data_string() -> Box<String> {
+    Box::from(fs::read_to_string("./data/input.txt").unwrap())
 }
 
-pub fn input_data_lines() -> Vec<String> {
-    input_data_string().lines().map(String::from).collect()
+pub fn input_data_lines() -> Vec<Box<str>> {
+    input_data_string().lines().map(|s| Box::from(s)).collect()
 }
+
 pub fn input_data_u32s() -> Vec<u32> {
     input_data_lines()
         .iter()
