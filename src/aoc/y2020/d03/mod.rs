@@ -2,14 +2,12 @@ use fun_time::fun_time;
 
 #[fun_time(give_back)]
 pub fn toboggan_trajectory(input: Vec<Box<str>>) -> (usize, usize) {
-    let width = input[0].len();
-
     let count_trees = |p: &(usize, usize)| -> usize {
         input
             .iter()
             .step_by(p.1)
             .enumerate()
-            .filter(|(i, row)| row.as_bytes()[i * p.0 % width] == b'#')
+            .filter(|(i, row)| row.as_bytes()[i * p.0 % input[0].len()] == b'#')
             .count()
     };
 
