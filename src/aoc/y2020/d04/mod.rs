@@ -48,19 +48,13 @@ impl<'a> Passport<'a> {
             "hcl" => {
                 value.len() == 7
                     && value.starts_with('#')
-                    && value[1..]
-                        .chars()
-                        .all(|c| c.is_digit(16) && !c.is_ascii_uppercase())
+                    && value[1..].chars().all(|c| c.is_ascii_hexdigit())
             }
-            "hgt" => {
-                if let Some(n) = value.strip_suffix("cm") {
-                    n.parse::<u32>().map_or(false, |h| (150..=193).contains(&h))
-                } else if let Some(n) = value.strip_suffix("in") {
-                    n.parse::<u32>().map_or(false, |h| (59..=76).contains(&h))
-                } else {
-                    false
-                }
-            }
+            "hgt" => match value.split_at(value.len().saturating_sub(2)) {
+                (n, "cm") => n.parse::<u32>().map_or(false, |h| (150..=193).contains(&h)),
+                (n, "in") => n.parse::<u32>().map_or(false, |h| (59..=76).contains(&h)),
+                _ => false,
+            },
             _ => false,
         }
     }
