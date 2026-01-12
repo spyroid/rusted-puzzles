@@ -9,15 +9,17 @@ pub fn passport_processing(input: Box<String>) -> (usize, usize) {
             let fields: HashMap<_, _> = line
                 .split_whitespace()
                 .map(|s| s.split_at(s.find(':').unwrap_or(0)))
-                .map(|(k, v)| (k, &v[1..])) // Skip the colon
+                .filter(|(k, _v)| *k != "cid")
+                .map(|(k, v)| (k, &v[1..]))
                 .collect();
             Passport { fields }
         })
         .collect();
 
     let part1 = passports.iter().filter(|p| p.valid()).count();
+    let part2 = passports.iter().filter(|p| p.strict_valid()).count();
 
-    (part1, 0)
+    (part1, part2)
 }
 
 #[derive(Debug)]
@@ -27,7 +29,47 @@ struct Passport<'a> {
 
 impl<'a> Passport<'a> {
     pub fn valid(&self) -> bool {
-        self.fields.len() == 8 || (self.fields.len() == 7 && !self.fields.contains_key("cid"))
+        self.fields.len() == 7
+    }
+    fn validate_range(s: &str, min: u32, max: u32) -> bool {
+        s.parse::<u32>()
+            .map_or(false, |num| (min..=max).contains(&num))
+    }
+
+    const COLORS: [&'static str; 7] = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"];
+
+    fn validate_field(field: &str, value: &str) -> bool {
+        match field {
+            "byr" => Self::validate_range(value, 1920, 2002),
+            "iyr" => Self::validate_range(value, 2010, 2020),
+            "eyr" => Self::validate_range(value, 2020, 2030),
+            "ecl" => Self::COLORS.contains(&value),
+            "pid" => value.len() == 9 && value.chars().all(|c| c.is_digit(10)),
+            "hcl" => {
+                value.len() == 7
+                    && value.starts_with('#')
+                    && value[1..]
+                        .chars()
+                        .all(|c| c.is_digit(16) && !c.is_ascii_uppercase())
+            }
+            "hgt" => {
+                if let Some(n) = value.strip_suffix("cm") {
+                    n.parse::<u32>().map_or(false, |h| (150..=193).contains(&h))
+                } else if let Some(n) = value.strip_suffix("in") {
+                    n.parse::<u32>().map_or(false, |h| (59..=76).contains(&h))
+                } else {
+                    false
+                }
+            }
+            _ => false,
+        }
+    }
+    pub fn strict_valid(&self) -> bool {
+        self.valid()
+            && self
+                .fields
+                .iter()
+                .all(|(&k, &v)| Self::validate_field(k, v))
     }
 }
 
