@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 #[derive(Debug)]
 #[allow(warnings)]
 pub struct Point {
@@ -5,9 +7,10 @@ pub struct Point {
     pub y: usize,
 }
 
-#[allow(warnings)]
-impl Point {
-    pub fn plus(&self, other: &Point) -> Point {
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, other: Point) -> Point {
         Point {
             x: self.x + other.x,
             y: self.y + other.y,
