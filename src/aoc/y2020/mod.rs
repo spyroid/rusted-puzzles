@@ -1,5 +1,5 @@
-pub mod d01;
-pub mod d02;
-pub mod d03;
-pub mod d04;
-pub mod d05;
+mod day1;
+mod day2;
+mod day3;
+mod day4;
+mod day5;

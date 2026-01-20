@@ -24,7 +24,7 @@ pub fn toboggan_trajectory(input: Vec<Box<str>>) -> (usize, usize) {
 
 #[cfg(test)]
 mod tests {
-    use crate::aoc::y2020::d03::toboggan_trajectory;
+    use crate::aoc::y2020::day3::toboggan_trajectory;
     use crate::gears::{input_data_lines, print_debug};
 
     #[test]

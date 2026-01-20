@@ -34,7 +34,7 @@ impl FromStr for BoardingPass {
 
 #[cfg(test)]
 mod tests {
-    use crate::aoc::y2020::d05::{BoardingPass, binary_boarding};
+    use crate::aoc::y2020::day5::{BoardingPass, binary_boarding};
     use crate::gears::{input_data_lines, print_debug};
 
     #[test]

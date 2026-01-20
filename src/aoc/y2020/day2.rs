@@ -49,7 +49,7 @@ impl<'a> PasswordRule<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::aoc::y2020::d02::password_philosophy;
+    use crate::aoc::y2020::day2::password_philosophy;
     use crate::gears::{input_data_lines, print_debug};
 
     #[test]
