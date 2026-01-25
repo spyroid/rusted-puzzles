@@ -1,4 +1,5 @@
 use fun_time::fun_time;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 enum Node {
@@ -9,29 +10,24 @@ enum Node {
 
 #[fun_time(give_back)]
 pub fn monster_messages(input: Vec<Box<str>>) -> (usize, usize) {
-    let rules: Vec<_> = input
+    let rules: HashMap<usize, Node> = input
         .iter()
         .map(|s| {
             let parts = s.split(": ").collect::<Vec<_>>();
             let id = parts[0].parse::<usize>().unwrap();
             if parts[1].starts_with('"') {
                 (id, Node::Terminal(parts[1].chars().nth(1).unwrap()))
-            } else if parts[1].contains('|') {
-                let ch: Vec<_> = parts[1]
-                    .split('|')
-                    .map(|s| {
-                        s.split_whitespace()
-                            .map(|v| v.parse::<usize>().unwrap())
-                            .collect::<Vec<usize>>()
-                    })
-                    .collect();
-                (id, Node::Choice((ch[0][0], ch[0][1]), (ch[1][0], ch[1][1])))
             } else {
-                let seq = parts[1]
+                let v = parts[1]
+                    .replace("|", "")
                     .split_whitespace()
                     .map(|s| s.parse::<usize>().unwrap())
-                    .collect::<Vec<usize>>();
-                (id, Node::Sequence(seq))
+                    .collect::<Vec<_>>();
+                if parts[1].contains("|") {
+                    (id, Node::Choice((v[0], v[1]), (v[2], v[3])))
+                } else {
+                    (id, Node::Sequence(v))
+                }
             }
         })
         .collect();
