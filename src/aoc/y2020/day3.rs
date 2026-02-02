@@ -25,10 +25,10 @@ pub fn toboggan_trajectory(input: Vec<Box<str>>) -> (usize, usize) {
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day3::toboggan_trajectory;
-    use crate::gears::{input_data_lines, print_debug};
+    use crate::gears::{input_data_lines, print_result};
 
     #[test]
     fn aoc() {
-        print_debug(toboggan_trajectory(input_data_lines()));
+        print_result(toboggan_trajectory(input_data_lines()));
     }
 }

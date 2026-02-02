@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 use std::fs;
+use std::time::Duration;
 
 pub mod point;
 
@@ -18,6 +19,6 @@ pub fn input_data_u32s() -> Vec<u32> {
         .collect::<Vec<u32>>()
 }
 
-pub fn print_debug<T: Debug>(value: T) {
-    println!("\n{:?}", value);
+pub fn print_result<T: Debug>(value: (T, Duration)) {
+    println!("\n{:?} -> {:?}", value.0, value.1);
 }

@@ -50,10 +50,10 @@ impl<'a> PasswordRule<'a> {
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day2::password_philosophy;
-    use crate::gears::{input_data_lines, print_debug};
+    use crate::gears::{input_data_lines, print_result};
 
     #[test]
     fn aoc() {
-        print_debug(password_philosophy(input_data_lines()));
+        print_result(password_philosophy(input_data_lines()));
     }
 }

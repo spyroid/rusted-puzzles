@@ -35,11 +35,11 @@ impl FromStr for BoardingPass {
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day5::{BoardingPass, binary_boarding};
-    use crate::gears::{input_data_lines, print_debug};
+    use crate::gears::{input_data_lines, print_result};
 
     #[test]
     fn aoc() {
-        print_debug(binary_boarding(input_data_lines()));
+        print_result(binary_boarding(input_data_lines()));
     }
 
     #[test]

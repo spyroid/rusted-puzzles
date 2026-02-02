@@ -1,16 +1,24 @@
+use crate::aoc::y2020::day19::Node::{Choice, Sequence, Terminal};
 use fun_time::fun_time;
+use regex::Regex;
 use std::collections::HashMap;
 
 #[derive(Debug)]
 enum Node {
     Terminal(char),
-    Choice((usize, usize), (usize, usize)),
+    Choice(Vec<usize>, Vec<usize>),
     Sequence(Vec<usize>),
 }
 
+type Rules = HashMap<usize, Node>;
+
 #[fun_time(give_back)]
 pub fn monster_messages(input: Vec<Box<str>>) -> (usize, usize) {
-    let rules: HashMap<usize, Node> = input
+    let pos = input.iter().position(|s| s.is_empty()).unwrap();
+    let i_rules = input[..pos].to_vec();
+    let i_strings = input[pos + 1..].to_vec();
+
+    let rules: Rules = i_rules
         .iter()
         .map(|s| {
             let parts = s.split(": ").collect::<Vec<_>>();
@@ -18,32 +26,68 @@ pub fn monster_messages(input: Vec<Box<str>>) -> (usize, usize) {
             if parts[1].starts_with('"') {
                 (id, Node::Terminal(parts[1].chars().nth(1).unwrap()))
             } else {
-                let v = parts[1]
-                    .replace("|", "")
-                    .split_whitespace()
+                let all_str = parts[1].split_whitespace().collect::<Vec<_>>();
+                let pos = all_str.iter().position(|s| *s == "|");
+                let all = all_str
+                    .iter()
+                    .filter(|s| **s != "|")
                     .map(|s| s.parse::<usize>().unwrap())
                     .collect::<Vec<_>>();
-                if parts[1].contains("|") {
-                    (id, Node::Choice((v[0], v[1]), (v[2], v[3])))
-                } else {
-                    (id, Node::Sequence(v))
+                match pos {
+                    Some(p) => (id, Choice(all[..p].to_vec(), all[p..].to_vec())),
+                    None => (id, Sequence(all.to_vec())),
                 }
             }
         })
         .collect();
 
-    println!("{:?}", rules);
+    // println!("{:?}", rules);
 
-    (0, 0)
+    let regexp = format!("^{}$", to_regex_str(&rules, 0));
+    let re = Regex::new(&regexp).unwrap();
+
+    let part1 = i_strings.iter().filter(|s| re.is_match(s)).count();
+
+    (part1, 0)
+}
+
+fn to_regex_str(rules: &Rules, idx: usize) -> String {
+    let rule = rules.get(&idx).unwrap();
+    match rule {
+        Terminal(c) => format!("{}", c),
+        Sequence(parts) => {
+            let seq = parts
+                .iter()
+                .map(|&sub_id| to_regex_str(rules, sub_id))
+                .collect::<String>();
+
+            if seq.is_empty() {
+                String::new()
+            } else if parts.len() == 1 {
+                seq
+            } else {
+                format!("({seq})")
+            }
+        }
+        Choice(l1, l2) => format!(
+            "({}|{})",
+            l1.iter()
+                .map(|i| to_regex_str(rules, *i))
+                .collect::<String>(),
+            l2.iter()
+                .map(|i| to_regex_str(rules, *i))
+                .collect::<String>()
+        ),
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day19::monster_messages;
-    use crate::gears::{input_data_lines, print_debug};
+    use crate::gears::{input_data_lines, print_result};
 
     #[test]
     fn aoc() {
-        print_debug(monster_messages(input_data_lines()));
+        print_result(monster_messages(input_data_lines()));
     }
 }

@@ -26,10 +26,10 @@ pub fn report_repair(input: Vec<u32>) -> (u64, u64) {
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day1::report_repair;
-    use crate::gears::{input_data_u32s, print_debug};
+    use crate::gears::{input_data_u32s, print_result};
 
     #[test]
     fn day1_test() {
-        print_debug(report_repair(input_data_u32s()));
+        print_result(report_repair(input_data_u32s()));
     }
 }

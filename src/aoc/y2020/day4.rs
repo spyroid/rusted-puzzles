@@ -70,10 +70,10 @@ impl<'a> Passport<'a> {
 #[cfg(test)]
 mod tests {
     use crate::aoc::y2020::day4::passport_processing;
-    use crate::gears::{input_data_string, print_debug};
+    use crate::gears::{input_data_string, print_result};
 
     #[test]
     fn aoc() {
-        print_debug(passport_processing(input_data_string()));
+        print_result(passport_processing(input_data_string()));
     }
 }
