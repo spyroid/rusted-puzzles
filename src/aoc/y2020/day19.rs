@@ -42,7 +42,7 @@ pub fn monster_messages(input: Vec<Box<str>>) -> (usize, usize) {
         .collect();
 
     let do_count = |rules: &Rules| -> usize {
-        let regexp = format!("^{}$", to_regex_str(&rules, 0, 25));
+        let regexp = format!("^{}$", to_regex_str(&rules, 0, 15));
         let re = Regex::new(&regexp).unwrap();
         i_strings.iter().filter(|s| re.is_match(s)).count()
     };
