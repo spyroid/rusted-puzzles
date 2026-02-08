@@ -5,17 +5,14 @@ use std::str::FromStr;
 #[fun_time(give_back)]
 fn factory(input: Vec<Box<str>>) -> usize {
     let machines: Vec<Machine> = input.iter().map(|x| x.parse().unwrap()).collect();
-    let part1: usize = machines
+    let part1 = machines
         .iter()
         .map(|m| {
-            // println!("{:?}", m);
-            let variants = (1..=m.buttons.len())
+            (1..=m.buttons.len())
                 .flat_map(|size| m.buttons.iter().combinations(size))
-                .find(|vec| {
-                    let n = vec.iter().fold(0, |acc, &x| acc ^ x);
-                    n == m.lights
-                });
-            variants.unwrap().len()
+                .find(|vec| vec.iter().fold(0, |acc, &x| acc ^ x) == m.lights)
+                .unwrap()
+                .len()
         })
         .sum();
 
